@@ -7,7 +7,7 @@ app = FastAPI()
 r = Redis(host=getenv('REDIS_HOST'))
 
 @app.get("/leaderboard")
-async def root():
+async def leaderboard():
     lb = r.zrange("lb", 0, -1, withscores=True)
     ids = []
     result = {}
