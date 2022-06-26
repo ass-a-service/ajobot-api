@@ -34,5 +34,5 @@ jobs:
         exec: |
           helm repo add ajobot https://charts.ajobot.com
           helm repo update
-          helm upgrade --install ajobot-api ajobot/ajobot-api -n ajobot --set image.tag=${{github.ref_name}} --set autoscaling.enabled=true --set autoscaling.maxReplicas=3 --set ingress.enabled=true --set ingress.host=api.ajobot.com --set ingress.secretName=ajobot-cert
+          helm upgrade --install ajobot-api ajobot/ajobot-api -n ajobot --set image.tag=${{github.ref_name}} --set autoscaling.enabled=true --set autoscaling.maxReplicas=3 --set ingress.enabled=true --set ingress.host=api.ajobot.com --set ingress.tls.secretName=ajobot-cert
         kubeconfig: '${{ secrets.KUBECONFIG }}'
