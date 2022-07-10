@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 import aioredis
 
@@ -7,6 +7,13 @@ from os import getenv
 app = FastAPI()
 
 r = aioredis.from_url(f"redis://{getenv('REDIS_HOST')}")
+
+@app.get("/keepalive")
+async def keepalive():
+    response = await r.ping()
+    if response != True:
+        raise HTTPException(status_code=500, detail="Redis ded")
+    return response
 
 @app.get("/stream/ajos")
 async def ajo_stream(count: int = 50, id: int = 0):
