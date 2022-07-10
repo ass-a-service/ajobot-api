@@ -39,7 +39,7 @@ async def leaderboard():
     i = 0
     for player_tuple in lb_slice:
         id,amount = player_tuple
-        result[id] = {"amount": int(amount), "name": name_list[i]}
+        result[name_list[i]] = int(amount)
         i += 1
 
     return result
