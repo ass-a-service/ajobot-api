@@ -20,16 +20,17 @@ async def get_player(player_id):
 
 @app.get("/leaderboard")
 async def leaderboard():
-    lb = await r.zrange("lb", 0, -1, withscores=True)
+    lb = await r.zrange("lb", 0, -1, withscores=True, desc=True)
+    lb_slice = lb[:10]
     ids = []
     result = {}
-    for player_tuple in lb:
+    for player_tuple in lb_slice:
         id,_ = player_tuple
         ids.append(id)
     name_list = await r.mget(ids.__iter__())
 
     i = 0
-    for player_tuple in lb:
+    for player_tuple in lb_slice:
         id,amount = player_tuple
         result[id] = {"amount": amount, "name": name_list[i]}
         i += 1
