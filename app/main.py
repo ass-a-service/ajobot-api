@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from redis.exceptions import ResponseError
 
 import aioredis
 
