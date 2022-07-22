@@ -1,12 +1,36 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 
 import aioredis
-
+import requests
 from os import getenv
 
 app = FastAPI()
 
 r = aioredis.from_url(f"redis://{getenv('REDIS_HOST')}")
+    
+@app.get("/auth/discord")
+async def auth_discord(code: str):
+    API_ENDPOINT = 'https://discord.com/api/v10'
+    CLIENT_ID = 'kok'
+    CLIENT_SECRET = 'kek'
+    REDIRECT_URI = 'http://localhost:8000/auth/discord'
+    data = {
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': REDIRECT_URI
+    }
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    r1 = requests.post('%s/oauth2/token' % API_ENDPOINT, data=data, headers=headers)
+    r1.raise_for_status()
+    result1 = r1.json()
+    r2 = requests.get('%s/users/@me' % API_ENDPOINT, headers={"Authorization": f"Bearer {result1['access_token']}"})
+    r2.raise_for_status()
+    return r2.json()
 
 @app.get("/keepalive")
 async def keepalive():
