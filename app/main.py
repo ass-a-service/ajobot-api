@@ -16,7 +16,7 @@ async def keepalive():
     return response
 
 @app.get("/stream/ajos")
-async def ajo_stream(count: int = 50, id: int = 0):
+async def ajo_stream(count: int = 50, id: str = 0):
     ajos = await r.xread({"ajobus": id}, count)
     return ajos
 
