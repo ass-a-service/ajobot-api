@@ -15,6 +15,11 @@ async def keepalive():
         raise HTTPException(status_code=500, detail="Redis ded")
     return response
 
+@app.get("/stream/debug")
+async def ajo_debug(count: int = 50, id: str = 0):
+    ajos = await r.xread({"ajodebug": id}, count)
+    return ajos
+
 @app.get("/stream/ajos")
 async def ajo_stream(count: int = 50, id: str = 0):
     ajos = await r.xread({"ajobus": id}, count)
