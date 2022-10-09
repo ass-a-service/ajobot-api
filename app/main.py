@@ -26,10 +26,15 @@ async def ajo_stream(count: int = 50, id: str = 0):
     return ajos
 
 @app.get("/player/{player_id}")
-async def get_player(player_id):
+async def get_player(player_id: int):
     ajos = await r.zscore("lb", player_id)
     return {"player_id": ajos}
 
+@app.get("/player/{player_name}")
+async def get_player_by_name(player_name: str):
+    ajos = await r.zscore("lb", player_name)
+    return {"player_name": ajos}
+ 
 @app.get("/leaderboard")
 async def leaderboard():
     lb = await r.zrange("lb", 0, -1, withscores=True, desc=True)
